@@ -1,3 +1,5 @@
+@import 'tailwindcss';
+@config "../../tailwind.config.ts";
 @import './iconfont.css';
 @import './shiki.css';
 @import './markdown.css';
