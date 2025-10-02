@@ -52,14 +52,14 @@ Enjoy it!
 │   ├── store/
 │   ├── styles/
 │   ├── utils/
-│   └── config.json
+│   └── config.yaml
 ├── astro.config.mjs
 ├── README.md
 ├── package.json
 └── tsconfig.json
 ```
 
-网站配置保存在 `config.json` 文件。
+网站配置保存在 `config.yaml` 文件。
 
 ## 🧞 Commands
 

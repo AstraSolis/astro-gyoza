@@ -1,4 +1,4 @@
-import { menus } from '@/config.json'
+import { menus } from '@/config'
 import { createContext, useContext, useState, forwardRef } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { motion, AnimatePresence, type Variants } from 'framer-motion'

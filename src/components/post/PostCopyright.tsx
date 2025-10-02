@@ -1,4 +1,4 @@
-import { author, site } from '@/config.json'
+import { author, site } from '@/config'
 import { getFormattedDateTime } from '@/utils/date'
 import { AnimatedSignature } from '../AnimatedSignature'
 import { useEffect, useState } from 'react'

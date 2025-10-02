@@ -1,4 +1,4 @@
-import { site } from '@/config.json'
+import { site } from '@/config'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useHeaderMetaInfo, useShouldHeaderMetaShow } from './hooks'
 

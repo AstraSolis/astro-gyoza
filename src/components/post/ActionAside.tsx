@@ -1,4 +1,4 @@
-import { sponsor, site } from '@/config.json'
+import { sponsor, site } from '@/config'
 import { motion } from 'framer-motion'
 import * as QR from 'qrcode.react'
 import { useAtomValue } from 'jotai'

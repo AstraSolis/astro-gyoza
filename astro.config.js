@@ -12,11 +12,17 @@ import { remarkEmbed } from './src/plugins/remarkEmbed'
 import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
 import { rehypeHeadingIds } from '@astrojs/markdown-remark'
-import { site } from './src/config.json'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import swup from '@swup/astro'
 import tailwindcss from '@tailwindcss/vite'
+import { yamlConfigPlugin } from './src/plugins/viteYamlConfig.js'
+import { readFileSync } from 'node:fs'
+import yaml from 'js-yaml'
+
+const configFile = readFileSync('./src/config.yaml', 'utf8')
+const config = yaml.load(configFile)
+const { site } = config
 
 // https://astro.build/config
 export default defineConfig({
@@ -48,7 +54,7 @@ export default defineConfig({
     remarkRehype: { footnoteLabel: '参考', footnoteBackLabel: '返回正文' },
   },
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), yamlConfigPlugin()],
     build: {
       rollupOptions: {
         external: ['/pagefind/pagefind.js'],

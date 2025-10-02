@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { menus } from '@/config.json'
+import { menus } from '@/config'
 import { clsx } from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
 import {

@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from 'react'
-import { footer } from '@/config.json'
+import { footer } from '@/config'
 import { getDiffInDays } from '@/utils/date'
 
 export function RunningDays() {

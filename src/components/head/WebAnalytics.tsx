@@ -1,4 +1,4 @@
-import { analytics } from '@/config.json'
+import { analytics } from '@/config'
 
 export function WebAnalytics() {
   if (import.meta.env.DEV || !analytics.enable) return null

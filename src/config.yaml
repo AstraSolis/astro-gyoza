@@ -1,0 +1,156 @@
+# ========================================
+# 网站基础配置
+# ========================================
+site:
+  url: https://blog.astrasolis.top/ # 网站完整地址，必须以 / 结尾
+  title: 十点还有几分钟の博客 # 网站标题，用于浏览器标签页和 SEO
+  description: 一个赛博垃圾场 # 网站描述，用于 SEO 和社交媒体分享
+  keywords: 十点还有几分钟,blog,Astro,AstraSolis,博客 # 网站关键词，用于 SEO
+  lang: zh-CN # 网站语言代码，符合 BCP 47 标准
+  favicon: /favicon.ico # 网站图标路径，存放在 public 目录下
+  appleTouchIcon: /apple-touch-icon.png # Apple 设备图标路径，存放在 public 目录下
+
+# ========================================
+# 作者信息配置
+# ========================================
+author:
+  name: AstraSolis # 作者名称，显示在文章版权信息等位置
+  twitterId: '@lxchapu' # Twitter/X 账号 ID，以 @ 开头，用于 Open Graph 标签
+  avatar: https://imgbed.astrasolis.top/file/AstraSolis/1759396813230_avatar.jpg # 作者头像 URL
+
+# ========================================
+# 首页 Hero 区域配置
+# ========================================
+hero:
+  name: 十点还有几分钟 # Hero 区域显示的主标题
+  bio: 欢迎来到我的个人博客 # 一句话自我介绍
+  description:  # 补充描述文字
+  # 社交账号列表，按顺序显示
+  socials:
+    - name: Github # 社交平台名称
+      icon: icon-github # 图标类名，需要对应 iconfont 中的图标
+      url: https://github.com/astrasolis # 社交账号链接
+      color: rgb(24, 23, 23) # 图标背景颜色
+    - name: X
+      icon: icon-x
+      url: https://twitter.com/lxchapu
+      color: rgb(36, 46, 54)
+    - name: Email
+      icon: icon-mail
+      url: mailto:AstraSolis@QQ.COM
+      color: rgb(212, 70, 56)
+  yiyan: 当第一颗卫星飞向大气层外,我们便以为自己终有一日会征服宇宙。 # 一言显示内容
+
+# ========================================
+# 主题颜色配置
+# ========================================
+color:
+  # 强调色配置，每次页面加载会随机选择一组
+  # 请填写 16 进制颜色值，支持浅色和深色模式
+  accent:
+    - light: '#F55555' # 浅色模式强调色
+      dark: '#FCCF31' # 深色模式强调色
+    - light: '#0396FF'
+      dark: '#ABDCFF'
+    - light: '#fb7287'
+      dark: '#99D8CF'
+    - light: '#F072B6'
+      dark: '#FFF886'
+    - light: '#9F44D3'
+      dark: '#E2B0FF'
+    - light: '#FF6666'
+      dark: '#A1CCD1'
+    - light: '#F6416C'
+      dark: '#838BC6'
+    - light: '#32CCBC'
+      dark: '#90F7EC'
+    - light: '#33A6B8'
+      dark: '#79F1A4'
+    - light: '#F55555'
+      dark: '#FCCF31'
+  # 背景色配置
+  bg:
+    primary: # 主背景色
+      light: '#ffffff' # 浅色模式
+      dark: '#1c1c1e' # 深色模式
+    secondary: # 次级背景色，用于卡片等组件
+      light: '#f4f4f5'
+      dark: '#27272a'
+  # 文字颜色配置
+  text:
+    primary: # 主要文字颜色
+      light: '#373a3c'
+      dark: '#ffffff'
+    secondary: # 次要文字颜色，用于辅助信息
+      light: '#71717a'
+      dark: '#d1d5db'
+  # 边框颜色配置
+  border:
+    primary: # 主要边框颜色
+      light: '#e4e4e7'
+      dark: '#3f3f46'
+
+# ========================================
+# 顶部导航菜单配置
+# ========================================
+menus:
+  - name: 首页 # 菜单项显示名称
+    link: / # 菜单项链接地址
+    icon: icon-pantone # 菜单项图标类名
+  - name: 归档
+    link: /archives
+    icon: icon-archive
+  - name: 项目
+    link: /projects
+    icon: icon-flask
+  - name: 关于
+    link: /about
+    icon: icon-ghost
+  - name: 友链
+    link: /friends
+    icon: icon-hearts
+
+# ========================================
+# 文章列表配置
+# ========================================
+posts:
+  perPage: 10 # 每页显示的文章数量
+
+# ========================================
+# 页脚配置
+# ========================================
+footer:
+  startTime: 2024-04-14T00:00:00Z # 网站开始运行时间，使用 ISO 8601 格式
+
+# ========================================
+# Waline 评论系统配置
+# 文档: https://waline.js.org/
+# ========================================
+waline:
+  serverURL: https://waline.lxchapu.com # Waline 服务器地址
+
+# ========================================
+# 赞助配置
+# ========================================
+sponsor:
+  wechat: https://object.lxchapu.com/bed%2F2024%2F0507_6e3e8f73df2d4e6d.webp # 微信赞赏码图片 URL
+
+# ========================================
+# 网站统计分析配置
+# 如需启用，请将 enable 设置为 true 并填写对应平台的配置
+# ========================================
+analytics:
+  enable: false # 是否启用网站统计分析
+  # Google Analytics 配置
+  # 文档: https://analytics.google.com
+  google:
+    measurementId: '' # Google Analytics 测量 ID (格式: G-XXXXXXXXXX)
+  # Umami 统计配置
+  # 文档: https://umami.is/docs
+  umami:
+    serverUrl: '' # Umami 服务器地址 (可选，默认使用官方云服务)
+    websiteId: '' # Umami 网站 ID
+  # Microsoft Clarity 配置
+  # 文档: https://clarity.microsoft.com/
+  microsoftClarity:
+    projectId: '' # Clarity 项目 ID

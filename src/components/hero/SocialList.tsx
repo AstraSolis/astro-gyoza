@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { hero } from '@/config.json'
+import { hero } from '@/config'
 import { motion } from 'framer-motion'
 
 const itemVariants = {

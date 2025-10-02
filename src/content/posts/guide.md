@@ -52,102 +52,100 @@ pnpm preview
 
 ### 配置项
 
-本项目中的绝大部分配置都定义在 `src/config.json` 文件中。
+本项目中的绝大部分配置都定义在 `src/config.yaml` 文件中。
 
-你应该首先将 `site.url` 修改成自己的域名，避免导航错误。
+你应该首先将 `site.url` 修改成自己的域名,避免导航错误。
 
 以下是配置项的说明：
 
-```json
-{
-  "site": {
-    "url": "", // 网站地址
-    "title": "", // 网站标题
-    "description": "", // 通用的网站描述 SEO
-    "keywords": "", // 通用的网站关键词 SEO
-    "lang": "zh-CN", // 网站的语言
-    "favicon": "", // 浏览器图标，存放在 public 目录下
-    "appleTouchIcon": "" // 苹果设备图标，存放在 public 目录下
-  },
-  "author": {
-    "name": "", // 作者名称
-    "twitterId": "", // 推特账号 ID，以 @ 开头，用于 Open Graph
-    "avatar": "" // 作者头像地址
-  },
-  // 首页 Hero 组件
-  "hero": {
-    "name": "", // 显示的名称
-    "bio": "", // 一句话介绍
-    "description": "", // 补充描述
-    // 社交账号
-    "socials": [
-      {
-        "name": "", // 社交平台类型
-        "icon": "", // 社交平台图标
-        "url": "", // 链接
-        "color": "" // 图标颜色
-      }
-    ],
-    "yiyan": "" // 显示一言
-  },
-  "color": {
-    // 强调色，请填写 16 进制颜色值。每次会从中随机取出一组
-    "accent": [{ "light": "", "dark": "" }],
-    // 背景色
-    "bg": {
-      "primary": { "light": "", "dark": "" },
-      "secondary": { "light": "", "dark": "" }
-    },
-    // 文字颜色
-    "text": {
-      "primary": { "light": "", "dark": "" },
-      "secondary": { "light": "", "dark": "" }
-    },
-    // 边框颜色
-    "border": {
-      "primary": { "light": "", "dark": "" }
-    }
-  },
-  // 顶部导航栏
-  "menus": [
-    {
-      "name": "首页",
-      "link": "/",
-      "icon": "icon-pantone"
-    }
-  ],
-  "posts": {
-    "perPage": 10 // 每一页显示的文章数量
-  },
-  "footer": {
-    "startTime": "" // 博客网站开始时间 请使用 ISO 格式
-  },
-  // Waline 评论系统，前往 https://waline.js.org/ 查看
-  "waline": {
-    "serverURL": ""
-  },
-  // 赞助
-  "sponsor": {
-    "wechat": "" // 微信赞赏码图片地址
-  },
-  // 如果需要使用网站数据统计，将 enable 修改为 true，并填写对应的配置
-  "analytics": {
-    "enable": false,
-    // https://analytics.google.com
-    "google": {
-      "measurementId": ""
-    },
-    // https://umami.is/docs
-    "umami": {
-      "serverUrl": "",
-      "websiteId": ""
-    },
-    // https://clarity.microsoft.com/
-    "microsoftClarity": {
-      "projectId": ""
-    }
-  }
-}
+```yaml
+site:
+  url: '' # 网站地址
+  title: '' # 网站标题
+  description: '' # 通用的网站描述 SEO
+  keywords: '' # 通用的网站关键词 SEO
+  lang: zh-CN # 网站的语言
+  favicon: '' # 浏览器图标，存放在 public 目录下
+  appleTouchIcon: '' # 苹果设备图标，存放在 public 目录下
+
+author:
+  name: '' # 作者名称
+  twitterId: '' # 推特账号 ID，以 @ 开头，用于 Open Graph
+  avatar: '' # 作者头像地址
+
+# 首页 Hero 组件
+hero:
+  name: '' # 显示的名称
+  bio: '' # 一句话介绍
+  description: '' # 补充描述
+  # 社交账号
+  socials:
+    - name: '' # 社交平台类型
+      icon: '' # 社交平台图标
+      url: '' # 链接
+      color: '' # 图标颜色
+  yiyan: '' # 显示一言
+
+color:
+  # 强调色，请填写 16 进制颜色值。每次会从中随机取出一组
+  accent:
+    - light: ''
+      dark: ''
+  # 背景色
+  bg:
+    primary:
+      light: ''
+      dark: ''
+    secondary:
+      light: ''
+      dark: ''
+  # 文字颜色
+  text:
+    primary:
+      light: ''
+      dark: ''
+    secondary:
+      light: ''
+      dark: ''
+  # 边框颜色
+  border:
+    primary:
+      light: ''
+      dark: ''
+
+# 顶部导航栏
+menus:
+  - name: 首页
+    link: /
+    icon: icon-pantone
+
+posts:
+  perPage: 10 # 每一页显示的文章数量
+
+footer:
+  startTime: '' # 博客网站开始时间 请使用 ISO 格式
+
+# Waline 评论系统，前往 https://waline.js.org/ 查看
+waline:
+  serverURL: ''
+
+# 赞助
+sponsor:
+  wechat: '' # 微信赞赏码图片地址
+
+# 如果需要使用网站数据统计，将 enable 修改为 true，并填写对应的配置
+analytics:
+  enable: false
+  # https://analytics.google.com
+  google:
+    measurementId: ''
+  # https://umami.is/docs
+  umami:
+    serverUrl: ''
+    websiteId: ''
+  # https://clarity.microsoft.com/
+  microsoftClarity:
+    projectId: ''
 ```
 
 ## 部署
