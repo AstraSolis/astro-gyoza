@@ -6,6 +6,7 @@ import yaml from 'js-yaml'
 export function yamlConfigPlugin() {
   const virtualModuleId = '@/config'
   const resolvedVirtualModuleId = '\0' + virtualModuleId
+  let configPath
 
   return {
     name: 'vite-plugin-yaml-config',
@@ -20,7 +21,10 @@ export function yamlConfigPlugin() {
     },
     load(id) {
       if (id === resolvedVirtualModuleId) {
-        const configPath = join(dirname(fileURLToPath(import.meta.url)), '../config.yaml')
+        configPath = join(dirname(fileURLToPath(import.meta.url)), '../config.yaml')
+        // 添加文件到监听列表,文件变化时会触发热重载
+        this.addWatchFile(configPath)
+
         const configFile = readFileSync(configPath, 'utf8')
         const config = yaml.load(configFile)
 
@@ -35,6 +39,15 @@ export const footer = ${JSON.stringify(config.footer, null, 2)};
 export const waline = ${JSON.stringify(config.waline, null, 2)};
 export const sponsor = ${JSON.stringify(config.sponsor, null, 2)};
 export const analytics = ${JSON.stringify(config.analytics, null, 2)};`
+      }
+    },
+    handleHotUpdate({ file, server }) {
+      // 当 config.yaml 文件变化时,触发完整页面重载
+      if (file === configPath) {
+        server.ws.send({
+          type: 'full-reload',
+          path: '*',
+        })
       }
     },
   }
