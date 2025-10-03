@@ -22,6 +22,7 @@ author:
 # 首页 Hero 区域配置
 # ========================================
 hero:
+  greeting: Hi there, I'm # 首页问候语
   name: 十点还有几分钟 # Hero 区域显示的主标题
   bio: 欢迎来到我的个人博客 # 一句话自我介绍
   description:  # 补充描述文字
@@ -120,14 +121,14 @@ posts:
 # 页脚配置
 # ========================================
 footer:
-  startTime: 2024-04-14T00:00:00Z # 网站开始运行时间，使用 ISO 8601 格式
+  startTime: 2025-07-30T00:00:00Z # 网站开始运行时间，使用 ISO 8601 格式
 
 # ========================================
 # Waline 评论系统配置
 # 文档: https://waline.js.org/
 # ========================================
 waline:
-  serverURL: https://waline.lxchapu.com # Waline 服务器地址
+  serverURL: https://waline.astrasolis.top # Waline 服务器地址
 
 # ========================================
 # 赞助配置
