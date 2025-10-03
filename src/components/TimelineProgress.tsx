@@ -2,74 +2,96 @@ import { useEffect, useRef, useState } from 'react'
 import { animate } from 'framer-motion'
 import { getDaysInYear, getDiffInDays, getStartOfDay, getStartOfYear } from '@/utils/date'
 
-export function TimelineProgress() {
-  const [currentYear, setCurrentYear] = useState(0)
-  const [dayOfYear, setDayOfYear] = useState(0)
-  const [percentOfYear, setPercentOfYear] = useState(0)
-  const [percentOfToday, setPercentOfToday] = useState(0)
+const MS_PER_DAY = 86400 * 1000
 
-  const updateInfo = () => {
-    const now = new Date()
-    setCurrentYear(now.getFullYear())
+function calculateTimeStats() {
+  const now = new Date()
+  const yearStart = getStartOfYear(now)
+  const dayStart = getStartOfDay(now)
+  const daysInYear = getDaysInYear(now)
 
-    const pastDays = getDiffInDays(getStartOfYear(now), now)
-    setDayOfYear(pastDays)
-    setPercentOfYear((pastDays / getDaysInYear(now)) * 100)
+  const pastDays = getDiffInDays(yearStart, now)
+  const msFromYearStart = now.getTime() - yearStart.getTime()
+  const msFromDayStart = now.getTime() - dayStart.getTime()
+  const msInYear = daysInYear * MS_PER_DAY
 
-    const pastTime = now.getTime() - getStartOfDay(now).getTime()
-    setPercentOfToday((pastTime / 86400 / 1000) * 100)
+  return {
+    currentYear: now.getFullYear(),
+    dayOfYear: pastDays,
+    percentOfYear: (msFromYearStart / msInYear) * 100,
+    percentOfToday: (msFromDayStart / MS_PER_DAY) * 100,
   }
+}
+
+export function TimelineProgress() {
+  const [stats, setStats] = useState(calculateTimeStats)
 
   useEffect(() => {
-    updateInfo()
-    const interval = setInterval(updateInfo, 1000)
-    return () => {
-      clearInterval(interval)
-    }
+    const interval = setInterval(() => {
+      setStats(calculateTimeStats())
+    }, 1000)
+    return () => clearInterval(interval)
   }, [])
 
   return (
     <>
       <p className="mt-4">
-        今天是 {currentYear} 年的第 <CountUp to={dayOfYear} decimals={0} /> 天
+        今天是 {stats.currentYear} 年的第 <CountUp value={stats.dayOfYear} decimals={0} /> 天
       </p>
       <p className="mt-4">
-        今年已过 <CountUp to={percentOfYear} decimals={5} />%
+        今年已过 <CountUp value={stats.percentOfYear} decimals={5} />%
       </p>
       <p className="mt-4">
-        今天已过 <CountUp to={percentOfToday} decimals={5} />%
+        今天已过 <CountUp value={stats.percentOfToday} decimals={5} />%
       </p>
     </>
   )
 }
 
-function CountUp({
-  to,
-  decimals,
-  duration = 1,
-}: {
-  to: number
-  decimals: number
-  duration?: number
-}) {
-  const node = useRef<HTMLSpanElement>(null)
-  const prev = useRef(0)
+function CountUp({ value, decimals }: { value: number; decimals: number }) {
+  const nodeRef = useRef<HTMLSpanElement>(null)
+  const prevValue = useRef(0)
+  const animationRef = useRef<ReturnType<typeof animate> | null>(null)
+  const isFirstAnimation = useRef(true)
+
+  // 组件挂载时的初始化
+  useEffect(() => {
+    isFirstAnimation.current = true
+    prevValue.current = 0
+    return () => {
+      // 组件卸载时重置状态,确保下次挂载时重新开始
+      isFirstAnimation.current = true
+      prevValue.current = 0
+    }
+  }, [])
 
   useEffect(() => {
-    if (!node.current) return
+    const node = nodeRef.current
+    if (!node) return
 
-    const control = animate(prev.current, to, {
+    // 停止之前的动画
+    animationRef.current?.stop()
+
+    const startValue = isFirstAnimation.current ? 0 : prevValue.current
+    const duration = 1
+    const easing = isFirstAnimation.current ? undefined : 'linear'
+
+    animationRef.current = animate(startValue, value, {
       duration,
-      onUpdate: (value) => {
-        node.current!.textContent = value.toFixed(decimals)
+      ease: easing,
+      onUpdate: (v) => {
+        node.textContent = v.toFixed(decimals)
       },
     })
-    prev.current = to
+
+    prevValue.current = value
+    isFirstAnimation.current = false
 
     return () => {
-      control.stop()
+      animationRef.current?.stop()
+      animationRef.current = null
     }
-  }, [to, decimals, duration])
+  }, [value, decimals])
 
-  return <span ref={node}></span>
+  return <span ref={nodeRef}>{value.toFixed(decimals)}</span>
 }
