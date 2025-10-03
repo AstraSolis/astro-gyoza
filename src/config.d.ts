@@ -28,6 +28,7 @@ declare module '@/config' {
   }
 
   export interface Hero {
+    greeting: string
     name: string
     bio: string
     description: string

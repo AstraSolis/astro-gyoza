@@ -24,9 +24,10 @@ export function PageScrollInfoProvider() {
       prevScrollY.current = currentTop
       setScrollLocation(currentTop)
     },
-    16,
+    100,
     {
-      leading: false,
+      leading: true,
+      trailing: true,
     },
   )
 

@@ -1,40 +1,51 @@
-import { useLayoutEffect, useState } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 
 export function Flashlight() {
-  const [cursorX, setCursorX] = useState(0)
-  const [cursorY, setCursorY] = useState(0)
   const isMobile = !window.matchMedia('(hover: hover)').matches
+  const elementRef = useRef<HTMLDivElement>(null)
 
   if (isMobile) {
     return null
   }
 
-  const backgroundImage = `radial-gradient(
-    circle 16vmax at ${cursorX}px ${cursorY}px,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.5) 80%,
-    rgba(0, 0, 0, 0.8) 100%
-  )`
-
   useLayoutEffect(() => {
+    const element = elementRef.current
+    if (!element) return
+
+    let animationFrameId: number
+
     const handleMouseMove = (event: MouseEvent) => {
-      setCursorX(event.clientX)
-      setCursorY(event.clientY)
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId)
+      }
+
+      animationFrameId = requestAnimationFrame(() => {
+        element.style.setProperty('--cursor-x', `${event.clientX}px`)
+        element.style.setProperty('--cursor-y', `${event.clientY}px`)
+      })
     }
 
     document.addEventListener('mousemove', handleMouseMove)
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove)
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId)
+      }
     }
   }, [])
 
   return (
     <div
+      ref={elementRef}
       className="fixed inset-0 z-50 pointer-events-none"
       style={{
-        backgroundImage,
-        display: isMobile ? 'none' : 'block',
+        backgroundImage: `radial-gradient(
+          circle 16vmax at var(--cursor-x, 50%) var(--cursor-y, 50%),
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.5) 80%,
+          rgba(0, 0, 0, 0.8) 100%
+        )`,
       }}
     ></div>
   )

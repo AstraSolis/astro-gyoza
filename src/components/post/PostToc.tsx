@@ -2,30 +2,43 @@ import { pageScrollLocationAtom, pageScrollDirectionAtom } from '@/store/scrollI
 import type { MarkdownHeading } from 'astro'
 import clsx from 'clsx'
 import { useAtomValue } from 'jotai'
-import { startTransition, useEffect, useRef, useState } from 'react'
+import { startTransition, useEffect, useRef, useState, useMemo } from 'react'
+import { throttle } from 'lodash-es'
 
 function useActiveItem() {
   const [activeItem, setActiveItem] = useState('')
   const scrollY = useAtomValue(pageScrollLocationAtom)
 
-  useEffect(() => {
-    const $article = document.querySelector('#markdown-wrapper')
-    if (!$article) return
-    const $headings = Array.from($article.querySelectorAll('h1,h2,h3,h4,h5,h6'))
-    for (let i = 0; i < $headings.length; i++) {
-      const item = $headings[i]
-      const nextItem = $headings[i + 1]
-      const itemTop = item.getBoundingClientRect().top
-      const nextItemTop = nextItem ? nextItem.getBoundingClientRect().top : 10000
+  const updateActiveItem = useMemo(
+    () =>
+      throttle(
+        () => {
+          const $article = document.querySelector('#markdown-wrapper')
+          if (!$article) return
+          const $headings = Array.from($article.querySelectorAll('h1,h2,h3,h4,h5,h6'))
+          for (let i = 0; i < $headings.length; i++) {
+            const item = $headings[i]
+            const nextItem = $headings[i + 1]
+            const itemTop = item.getBoundingClientRect().top
+            const nextItemTop = nextItem ? nextItem.getBoundingClientRect().top : 10000
 
-      if (itemTop <= 80 && nextItemTop > 80) {
-        startTransition(() => {
-          setActiveItem(item.id)
-        })
-        break
-      }
-    }
-  }, [scrollY])
+            if (itemTop <= 80 && nextItemTop > 80) {
+              startTransition(() => {
+                setActiveItem(item.id)
+              })
+              break
+            }
+          }
+        },
+        100,
+        { leading: true, trailing: true },
+      ),
+    [],
+  )
+
+  useEffect(() => {
+    updateActiveItem()
+  }, [scrollY, updateActiveItem])
 
   return activeItem
 }

@@ -1,6 +1,5 @@
 ---
 import type { CollectionEntry } from 'astro:content'
-import { PostCardHoverOverlay } from './PostCardHoverOverlay'
 import PostMetaInfo from './PostMetaInfo.astro'
 
 interface Props {
@@ -12,8 +11,8 @@ const { entry } = Astro.props
 const { remarkPluginFrontmatter } = await entry.render()
 ---
 
-<a class="block relative py-8 focus-visible:outline-0" href={`/posts/${entry.slug}`}>
-  <PostCardHoverOverlay client:only="react" />
+<a class="post-card block relative py-8 focus-visible:outline-0" href={`/posts/${entry.slug}`}>
+  <div class="post-card-overlay absolute inset-y-4 -inset-x-4 -z-1 bg-accent/10 rounded-lg opacity-0 scale-95 transition-all duration-200"></div>
   <h2 class="relative text-2xl font-bold">
     {entry.data.title}
     {
@@ -71,3 +70,35 @@ const { remarkPluginFrontmatter } = await entry.render()
     </div>
   </div>
 </a>
+
+<script>
+  function initPostCardHover() {
+    const cards = document.querySelectorAll('.post-card')
+
+    cards.forEach(card => {
+      const overlay = card.querySelector('.post-card-overlay')
+      if (!overlay) return
+
+      const handleMouseEnter = () => {
+        overlay.classList.remove('opacity-0', 'scale-95')
+        overlay.classList.add('opacity-100', 'scale-100')
+      }
+
+      const handleMouseLeave = () => {
+        overlay.classList.remove('opacity-100', 'scale-100')
+        overlay.classList.add('opacity-0', 'scale-95')
+      }
+
+      card.addEventListener('mouseenter', handleMouseEnter)
+      card.addEventListener('mouseleave', handleMouseLeave)
+      card.addEventListener('focus', handleMouseEnter)
+      card.addEventListener('blur', handleMouseLeave)
+    })
+  }
+
+  // 初始化
+  initPostCardHover()
+
+  // Swup 路由切换后重新初始化
+  document.addEventListener('swup:page:view', initPostCardHover)
+</script>

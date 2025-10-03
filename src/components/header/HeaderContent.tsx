@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef } from 'react'
 import { menus } from '@/config'
 import { clsx } from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -57,21 +57,24 @@ function AccessibleMenu() {
 
 function HeaderMenu({ isBgShow }: { isBgShow: boolean }) {
   const pathName = usePathName()
-  const [mouseX, setMouseX] = useState(0)
-  const [mouseY, setMouseY] = useState(0)
-  const [radius, setRadius] = useState(0)
-
-  const background = `radial-gradient(${radius}px circle at ${mouseX}px ${mouseY}px, rgb(var(--color-accent) / 0.12) 0%, transparent 65%)`
+  const navRef = useRef<HTMLElement>(null)
+  const gradientRef = useRef<HTMLDivElement>(null)
 
   const handleMouseMove = ({ clientX, clientY, currentTarget }: React.MouseEvent) => {
+    const gradient = gradientRef.current
+    if (!gradient) return
+
     const bounds = currentTarget.getBoundingClientRect()
-    setMouseX(clientX - bounds.left)
-    setMouseY(clientY - bounds.top)
-    setRadius(Math.sqrt(bounds.width ** 2 + bounds.height ** 2) / 2.5)
+    const mouseX = clientX - bounds.left
+    const mouseY = clientY - bounds.top
+    const radius = Math.sqrt(bounds.width ** 2 + bounds.height ** 2) / 2.5
+
+    gradient.style.background = `radial-gradient(${radius}px circle at ${mouseX}px ${mouseY}px, rgb(var(--color-accent) / 0.12) 0%, transparent 65%)`
   }
 
   return (
     <nav
+      ref={navRef}
       className={clsx('relative rounded-full group pointer-events-auto duration-200', {
         'bg-gradient-to-b from-zinc-50/70 to-white/90 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur-md dark:from-zinc-900/70 dark:to-zinc-800/90 dark:ring-zinc-100/10':
           isBgShow,
@@ -79,8 +82,8 @@ function HeaderMenu({ isBgShow }: { isBgShow: boolean }) {
       onMouseMove={handleMouseMove}
     >
       <div
+        ref={gradientRef}
         className="absolute -z-1 -inset-px rounded-full opacity-0 group-hover:opacity-100 duration-500"
-        style={{ background }}
         aria-hidden
       ></div>
       <div className="text-sm px-4 flex">
