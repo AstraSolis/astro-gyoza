@@ -58,6 +58,38 @@ export default defineConfig({
     build: {
       rollupOptions: {
         external: ['/pagefind/pagefind.js'],
+        output: {
+          manualChunks: (id) => {
+            // React 核心库单独分包
+            if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+              return 'vendor-react'
+            }
+            // Framer Motion 动画库单独分包
+            if (id.includes('node_modules/framer-motion/')) {
+              return 'vendor-motion'
+            }
+            // Waline 评论系统单独分包
+            if (id.includes('node_modules/@waline/client/')) {
+              return 'vendor-waline'
+            }
+            // Radix UI 组件库单独分包
+            if (id.includes('node_modules/@radix-ui/')) {
+              return 'vendor-ui'
+            }
+            // Lodash 工具库单独分包
+            if (id.includes('node_modules/lodash-es/')) {
+              return 'vendor-lodash'
+            }
+            // Jotai 状态管理库单独分包
+            if (id.includes('node_modules/jotai/')) {
+              return 'vendor-jotai'
+            }
+            // 其他 node_modules 依赖统一打包
+            if (id.includes('node_modules/')) {
+              return 'vendor-misc'
+            }
+          },
+        },
       },
     },
   },

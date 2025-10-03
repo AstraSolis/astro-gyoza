@@ -1,11 +1,19 @@
 import { getCollection } from 'astro:content'
 
+// 缓存所有文章数据,避免重复调用
+let cachedPosts: Awaited<ReturnType<typeof getCollection<'posts'>>> | null = null
+
 // 获取所有文章
 async function getAllPosts() {
+  if (cachedPosts) {
+    return cachedPosts
+  }
+
   const allPosts = await getCollection('posts', ({ data }) => {
     return import.meta.env.PROD ? data.draft !== true : true
   })
 
+  cachedPosts = allPosts
   return allPosts
 }
 

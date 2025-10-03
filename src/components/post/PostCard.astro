@@ -72,28 +72,64 @@ const { remarkPluginFrontmatter } = await entry.render()
 </a>
 
 <script>
+  // 使用事件委托优化性能,减少事件监听器数量
   function initPostCardHover() {
-    const cards = document.querySelectorAll('.post-card')
+    // 移除旧的监听器(如果存在)
+    document.removeEventListener('mouseover', handleMouseOver)
+    document.removeEventListener('mouseout', handleMouseOut)
+    document.removeEventListener('focusin', handleFocusIn)
+    document.removeEventListener('focusout', handleFocusOut)
 
-    cards.forEach(card => {
-      const overlay = card.querySelector('.post-card-overlay')
-      if (!overlay) return
+    // 添加新的委托监听器 (mouseover/mouseout 支持冒泡,适合事件委托)
+    document.addEventListener('mouseover', handleMouseOver)
+    document.addEventListener('mouseout', handleMouseOut)
+    document.addEventListener('focusin', handleFocusIn)
+    document.addEventListener('focusout', handleFocusOut)
+  }
 
-      const handleMouseEnter = () => {
-        overlay.classList.remove('opacity-0', 'scale-95')
-        overlay.classList.add('opacity-100', 'scale-100')
-      }
+  function handleMouseOver(e: Event) {
+    const target = e.target as Element
+    const card = target.closest('.post-card')
+    if (!card) return
+    const overlay = card.querySelector('.post-card-overlay')
+    if (!overlay) return
+    overlay.classList.remove('opacity-0', 'scale-95')
+    overlay.classList.add('opacity-100', 'scale-100')
+  }
 
-      const handleMouseLeave = () => {
-        overlay.classList.remove('opacity-100', 'scale-100')
-        overlay.classList.add('opacity-0', 'scale-95')
-      }
+  function handleMouseOut(e: Event) {
+    const target = e.target as Element
+    const card = target.closest('.post-card')
+    if (!card) return
 
-      card.addEventListener('mouseenter', handleMouseEnter)
-      card.addEventListener('mouseleave', handleMouseLeave)
-      card.addEventListener('focus', handleMouseEnter)
-      card.addEventListener('blur', handleMouseLeave)
-    })
+    // 检查鼠标是否真的离开了卡片区域
+    const relatedTarget = (e as MouseEvent).relatedTarget as Element | null
+    if (relatedTarget && card.contains(relatedTarget)) return
+
+    const overlay = card.querySelector('.post-card-overlay')
+    if (!overlay) return
+    overlay.classList.remove('opacity-100', 'scale-100')
+    overlay.classList.add('opacity-0', 'scale-95')
+  }
+
+  function handleFocusIn(e: Event) {
+    const target = e.target as Element
+    const card = target.closest('.post-card')
+    if (!card) return
+    const overlay = card.querySelector('.post-card-overlay')
+    if (!overlay) return
+    overlay.classList.remove('opacity-0', 'scale-95')
+    overlay.classList.add('opacity-100', 'scale-100')
+  }
+
+  function handleFocusOut(e: Event) {
+    const target = e.target as Element
+    const card = target.closest('.post-card')
+    if (!card) return
+    const overlay = card.querySelector('.post-card-overlay')
+    if (!overlay) return
+    overlay.classList.remove('opacity-100', 'scale-100')
+    overlay.classList.add('opacity-0', 'scale-95')
   }
 
   // 初始化
