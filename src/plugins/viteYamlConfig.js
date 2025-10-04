@@ -38,7 +38,8 @@ export const posts = ${JSON.stringify(config.posts, null, 2)};
 export const footer = ${JSON.stringify(config.footer, null, 2)};
 export const waline = ${JSON.stringify(config.waline, null, 2)};
 export const sponsor = ${JSON.stringify(config.sponsor, null, 2)};
-export const analytics = ${JSON.stringify(config.analytics, null, 2)};`
+export const analytics = ${JSON.stringify(config.analytics, null, 2)};
+export const like = ${JSON.stringify(config.like, null, 2)};`
       }
     },
     handleHotUpdate({ file, server }) {

@@ -29,6 +29,48 @@ const { title, description, image } = Astro.props
     <ThemeLoader />
     <AccentColorInjector />
     <PrintVersion />
+
+    <!-- Waline localStorage 拦截器 - 必须在 Waline 加载前执行 -->
+    <script is:inline>
+      // 保存原始方法
+      const originalSetItem = Storage.prototype.setItem
+      const originalRemoveItem = Storage.prototype.removeItem
+
+      // 辅助函数：触发自定义事件
+      function dispatchStorageEvent(key, newValue, oldValue) {
+        try {
+          const event = new CustomEvent('waline:storage', {
+            detail: { key, newValue, oldValue },
+          })
+          window.dispatchEvent(event)
+        } catch (e) {
+          // 某些严格的 CSP 环境可能会阻止自定义事件
+          if (typeof console !== 'undefined' && console.warn) {
+            console.warn('[Waline] Failed to dispatch storage event:', e)
+          }
+        }
+      }
+
+      // 覆写 setItem
+      Storage.prototype.setItem = function (key, value) {
+        const oldValue = this.getItem(key)
+        originalSetItem.call(this, key, value)
+
+        if (key === 'WALINE_USER' || key.startsWith('WALINE_')) {
+          dispatchStorageEvent(key, value, oldValue)
+        }
+      }
+
+      // 覆写 removeItem
+      Storage.prototype.removeItem = function (key) {
+        const oldValue = this.getItem(key)
+        originalRemoveItem.call(this, key)
+
+        if (key === 'WALINE_USER' || key.startsWith('WALINE_')) {
+          dispatchStorageEvent(key, null, oldValue)
+        }
+      }
+    </script>
   </head>
   <body>
     <slot />
