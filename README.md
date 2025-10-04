@@ -5,6 +5,9 @@ Gyoza is a static blog template built with Astro and React.
 ![astro version](https://img.shields.io/badge/astro-4.6-red)
 ![node version](https://img.shields.io/badge/node-18.18-green)
 
+本仓库是基于 [MIT](LICENSE) 许可证修改的自用版本,原仓库 [@lxchapu/astro-gyoza
+](https://github.com/lxchapu/astro-gyoza) 许可证 [LICENSE](LICENSE)
+
 Demo Site:
 
 - [gyoza.lxchapu.com](https://gyoza.lxchapu.com)
