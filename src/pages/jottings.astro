@@ -1,0 +1,46 @@
+---
+import Highlight from '@/components/Highlight.astro'
+import PageLayout from '@/layouts/PageLayout.astro'
+import { getEntry } from 'astro:content'
+import { JottingsList } from '@/components/jottings/JottingsList'
+
+const jottingsEntry = await getEntry('jottings', 'jottings')
+const jottingsList = jottingsEntry?.data.items || []
+
+// 按日期降序排序
+const sortedJottings = jottingsList.sort((a, b) => b.date.getTime() - a.date.getTime())
+
+// 按年份分组
+const groupedJottings = sortedJottings.reduce<
+  {
+    year: number
+    items: typeof jottingsList
+  }[]
+>((acc, cur) => {
+  const year = cur.date.getFullYear()
+  const lastYearGroup = acc[acc.length - 1]
+  if (lastYearGroup && lastYearGroup.year === year) {
+    lastYearGroup.items.push(cur)
+  } else {
+    acc.push({
+      year,
+      items: [cur],
+    })
+  }
+  return acc
+}, [])
+---
+
+<PageLayout title="随记">
+  <div class="max-w-[800px] mx-auto px-4 py-16">
+    <header class="space-y-4 mb-8">
+      <h1 class="text-4xl font-bold">
+        <Highlight>随记</Highlight>
+      </h1>
+      <p>美好的风景，动人的旋律，触动人心的句子，都值得被好好收藏</p>
+      <hr class="w-[100px] border-primary" />
+    </header>
+
+    <JottingsList yearGroups={groupedJottings} client:visible />
+  </div>
+</PageLayout>

@@ -104,6 +104,9 @@ menus:
   - name: 项目
     link: /projects
     icon: icon-flask
+  - name: 随记
+    link: /jottings
+    icon: icon-quotes-l
   - name: 关于
     link: /about
     icon: icon-ghost
