@@ -5,6 +5,7 @@
 @import './markdown.css';
 @import './signature.css';
 @import './swup.css';
+@import './waline.css';
 
 @font-face {
   font-family: 'Atkinson';
