@@ -1,20 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { init } from '@waline/client'
 import '@waline/client/style'
-import { LIKE_RECORD_MARKER } from '@/utils/likeService'
 
 // 时间常量（毫秒）
 const DEBOUNCE_DELAY = 50
-const OBSERVER_RESUME_DELAY = 100
 const INITIAL_HIDE_DELAY = 200
-
-// 评论数选择器列表（按优先级排序）
-const COMMENT_COUNT_SELECTORS = [
-  '.wl-count',
-  '.wl-num',
-  '.wl-header-count',
-  '.wl-comment-count',
-] as const
 
 /**
  * 评论布局管理器 - 负责评论区域的DOM操作和布局管理
@@ -25,100 +15,6 @@ class CommentLayoutManager {
 
   constructor(container: HTMLDivElement) {
     this.container = container
-  }
-
-  /**
-   * 隐藏点赞记录评论并返回隐藏数量
-   */
-  hideLikeRecordComments(): number {
-    let hiddenCount = 0
-    const commentNodes = this.container.querySelectorAll('.wl-card-item')
-
-    commentNodes.forEach((node) => {
-      const contentEl = node.querySelector('.wl-content')
-      if (contentEl?.textContent?.includes(LIKE_RECORD_MARKER)) {
-        ;(node as HTMLElement).style.display = 'none'
-        hiddenCount++
-      }
-    })
-
-    return hiddenCount
-  }
-
-  /**
-   * 更新评论数显示
-   */
-  updateCommentCount(hiddenCount: number): void {
-    if (hiddenCount <= 0) return
-
-    const updatedElements = new Set<Element>()
-
-    // 尝试使用已知选择器
-    for (const selector of COMMENT_COUNT_SELECTORS) {
-      try {
-        const countElements = this.container.querySelectorAll(selector)
-        countElements.forEach((element) => {
-          if (updatedElements.has(element)) return
-
-          if (this.updateElementCount(element, hiddenCount)) {
-            updatedElements.add(element)
-          }
-        })
-      } catch (e) {
-        // 忽略选择器错误
-        continue
-      }
-    }
-
-    // 如果没有找到元素，使用通用方法
-    if (updatedElements.size === 0) {
-      this.updateCommentCountGeneric(hiddenCount)
-    }
-  }
-
-  /**
-   * 更新单个元素的计数值
-   */
-  private updateElementCount(element: Element, hiddenCount: number): boolean {
-    const text = element.textContent || ''
-    const match = text.match(/\d+/)
-
-    if (!match) return false
-
-    const currentCount = parseInt(match[0])
-    const actualCount = Math.max(0, currentCount - hiddenCount)
-
-    if (currentCount !== actualCount) {
-      const newText = text.replace(/\d+/, actualCount.toString())
-      element.textContent = newText
-      return true
-    }
-
-    return false
-  }
-
-  /**
-   * 通用方法更新评论数（遍历文本节点）
-   */
-  private updateCommentCountGeneric(hiddenCount: number): void {
-    const walker = document.createTreeWalker(this.container, NodeFilter.SHOW_TEXT, null)
-
-    let node
-    while ((node = walker.nextNode())) {
-      const text = node.textContent || ''
-      if (/\d+\s*(条)?评论|评论.*?\(\d+\)/i.test(text)) {
-        const match = text.match(/\d+/)
-        if (match) {
-          const currentCount = parseInt(match[0])
-          const actualCount = Math.max(0, currentCount - hiddenCount)
-
-          if (currentCount !== actualCount) {
-            node.textContent = text.replace(/\d+/, actualCount.toString())
-            break
-          }
-        }
-      }
-    }
   }
 
   /**
@@ -269,18 +165,15 @@ class CommentLayoutManager {
   /**
    * 执行完整的布局更新
    */
-  performFullLayoutUpdate(): number {
-    if (this.isLayoutLocked) return 0
+  performFullLayoutUpdate(): void {
+    if (this.isLayoutLocked) return
 
     this.isLayoutLocked = true
 
     try {
-      const hiddenCount = this.hideLikeRecordComments()
       this.rearrangeCommentLayout()
       this.reorganizeActionButtons()
       this.addInteractiveEnhancements()
-
-      return hiddenCount
     } finally {
       this.isLayoutLocked = false
     }
@@ -294,8 +187,6 @@ function useCommentLayout(container: HTMLDivElement | null) {
   const layoutRef = useRef<CommentLayoutManager | null>(null)
   const observerRef = useRef<MutationObserver | null>(null)
   const debounceRef = useRef<NodeJS.Timeout | null>(null)
-  const isUpdatingRef = useRef(false)
-  const lastHiddenCountRef = useRef(0)
 
   useEffect(() => {
     if (!container) return
@@ -303,45 +194,10 @@ function useCommentLayout(container: HTMLDivElement | null) {
     // 初始化布局管理器
     layoutRef.current = new CommentLayoutManager(container)
 
-    // 处理点赞记录隐藏和评论数更新
-    const handleLikeRecordsHiding = () => {
-      if (!container || !layoutRef.current || isUpdatingRef.current) return
-
-      const hiddenCount = layoutRef.current.performFullLayoutUpdate()
-
-      // 只在隐藏数量变化时才修正评论数（避免无限循环）
-      if (hiddenCount > 0 && hiddenCount !== lastHiddenCountRef.current) {
-        lastHiddenCountRef.current = hiddenCount
-        handleCommentCountUpdate(hiddenCount)
-      }
-    }
-
-    // 处理评论数更新
-    const handleCommentCountUpdate = (hiddenCount: number) => {
+    // 处理布局更新
+    const handleLayoutUpdate = () => {
       if (!container || !layoutRef.current) return
-
-      // 设置标志，防止无限循环
-      isUpdatingRef.current = true
-
-      // 暂时断开观察器
-      if (observerRef.current) {
-        observerRef.current.disconnect()
-      }
-
-      try {
-        layoutRef.current.updateCommentCount(hiddenCount)
-      } finally {
-        // 延迟恢复观察器和标志
-        setTimeout(() => {
-          isUpdatingRef.current = false
-          if (container && observerRef.current) {
-            observerRef.current.observe(container, {
-              childList: true,
-              subtree: true,
-            })
-          }
-        }, OBSERVER_RESUME_DELAY)
-      }
+      layoutRef.current.performFullLayoutUpdate()
     }
 
     // 创建防抖观察器
@@ -350,12 +206,12 @@ function useCommentLayout(container: HTMLDivElement | null) {
         clearTimeout(debounceRef.current)
       }
       debounceRef.current = setTimeout(() => {
-        handleLikeRecordsHiding()
+        handleLayoutUpdate()
       }, DEBOUNCE_DELAY)
     })
 
     // 初始处理
-    const initialTimer = setTimeout(handleLikeRecordsHiding, INITIAL_HIDE_DELAY)
+    const initialTimer = setTimeout(handleLayoutUpdate, INITIAL_HIDE_DELAY)
 
     // 开始监听后续变化
     observerRef.current.observe(container, {

@@ -6,7 +6,6 @@ import { metaSlugAtom, metaTitleAtom } from '@/store/metaInfo'
 import clsx from 'clsx'
 import { toast } from 'react-toastify'
 import { useModal } from '@/components/ui/modal'
-import { LikeButtonAside } from '@/components/like'
 
 interface ShareData {
   url: string
@@ -34,8 +33,6 @@ const shareList = [
 ]
 
 export function ActionAside() {
-  const postSlug = useAtomValue(metaSlugAtom)
-
   return (
     <div
       className="absolute left-0 bottom-0 flex flex-col gap-4"
@@ -43,7 +40,6 @@ export function ActionAside() {
         transform: 'translateY(calc(100% + 24px))',
       }}
     >
-      <LikeButtonAside articlePath={postSlug} />
       <ShareButton />
       <DonateButton />
     </div>

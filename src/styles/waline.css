@@ -509,7 +509,6 @@
 
 /* 操作按钮样式 */
 .wl-card .wl-delete,
-.wl-card .wl-like,
 .wl-card .wl-reply,
 .wl-card .wl-edit {
   padding: 2px var(--waline-spacing-xs);
@@ -531,7 +530,6 @@
 }
 
 .wl-card .wl-delete:hover,
-.wl-card .wl-like:hover,
 .wl-card .wl-reply:hover,
 .wl-card .wl-edit:hover {
   color: var(--waline-theme-color);
@@ -539,15 +537,13 @@
 }
 
 .wl-card .wl-delete.active,
-.wl-card .wl-like.active,
 .wl-card .wl-reply.active,
 .wl-card .wl-edit.active {
   color: var(--waline-active-color);
   background: var(--waline-mention-bg);
 }
 
-/* 点赞计数 */
-.wl-card .wl-like .wl-count,
+/* 回复计数 */
 .wl-card .wl-reply .wl-count {
   font-size: 11px;
   color: inherit;

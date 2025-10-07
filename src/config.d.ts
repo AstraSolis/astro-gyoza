@@ -87,13 +87,6 @@ declare module '@/config' {
     }
   }
 
-  export interface Like {
-    enable: boolean
-    showInCard: boolean
-    showRanking: boolean
-    rankingCount: number
-  }
-
   export interface Config {
     site: Site
     author: Author
@@ -105,7 +98,6 @@ declare module '@/config' {
     waline: Waline
     sponsor: Sponsor
     analytics: Analytics
-    like: Like
   }
 
   export const site: Site
@@ -118,7 +110,6 @@ declare module '@/config' {
   export const waline: Waline
   export const sponsor: Sponsor
   export const analytics: Analytics
-  export const like: Like
 
   const config: Config
   export default config

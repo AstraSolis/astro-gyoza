@@ -52,7 +52,6 @@
 │   │   ├── header/             # 页眉导航组件
 │   │   ├── hero/               # 首页 Hero 区域
 │   │   ├── jottings/           # 随记组件
-│   │   ├── like/               # 点赞功能组件
 │   │   ├── post/               # 文章相关组件
 │   │   ├── provider/           # Context Provider
 │   │   └── ui/                 # 通用 UI 组件

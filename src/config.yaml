@@ -158,13 +158,3 @@ analytics:
   # 文档: https://clarity.microsoft.com/
   microsoftClarity:
     projectId: '' # Clarity 项目 ID
-
-# ========================================
-# 点赞功能配置
-# 基于 Waline 服务实现文章点赞功能
-# ========================================
-like:
-  enable: true # 是否启用点赞功能
-  showInCard: true # 是否在文章卡片显示点赞数
-  showRanking: true # 是否显示点赞排行榜
-  rankingCount: 10 # 排行榜显示数量
